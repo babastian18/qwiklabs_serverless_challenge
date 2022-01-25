@@ -1,0 +1,24 @@
+BILLING_URL=$(gcloud run services describe private-billing-service-857 \
+--platform managed \
+--region us-central1 \
+--format "value(status.url)")
+
+gcloud iam service-accounts create billing-service-sa-929 --display-name "Billing Service Cloud Run"
+
+
+gcloud run deploy billing-prod-service-797 --image gcr.io/${PROJECT_ID}/billing-prod-api:0.1
+
+PROD_BILLING_URL=$(gcloud run services \
+describe private-billing-service-857 \
+--platform managed \
+--region us-central1 \
+--format "value(status.url)")
+
+
+PROD_BILLING_SERVICE=private-billing-service
+
+
+gcloud iam service-accounts create frontend-service-sa-624 --display-name "Billing Service Cloud Run Invoker"
+
+
+gcloud run deploy frontend-prod-service-312 --image gcr.io/${PROJECT_ID}/frontend-prod:0.1
